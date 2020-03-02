@@ -3,3 +3,8 @@ $body-color: #fefefe;
 
 @import "~bootstrap/scss/bootstrap";
 
+.errorMsg {
+    font-style: italic;
+    font-weight: bold;
+}
+

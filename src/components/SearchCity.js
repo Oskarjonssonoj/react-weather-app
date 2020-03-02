@@ -6,7 +6,7 @@ class SearchCity extends React.Component {
 		cityName: '',
 	}
 
-	handleFormSubmit = (e) => {
+	handleSubmit = (e) => {
 		e.preventDefault();
 
 		this.props.getWeather(this.state.cityName);
@@ -16,8 +16,8 @@ class SearchCity extends React.Component {
 		});
 	}
 
-	handleInputTitleChange = (e) => {
-		console.log(e.target.value)
+	handleChange = (e) => {
+		
 		this.setState({
 			cityName: e.target.value,
 		});
@@ -26,13 +26,13 @@ class SearchCity extends React.Component {
 	render() {
 		return (
 			<div id="SearchCity" className="mb-5">
-				<form onSubmit={this.handleFormSubmit}>
+				<form onSubmit={this.handleSubmit}>
 					<div className="input-group">
 						<input 
 							type="text" 
 							className="form-control form-control-lg" 
 							id="city" 
-							onChange={this.handleInputTitleChange}
+							onChange={this.handleChange}
 							value={this.state.cityName}
 						/>
 

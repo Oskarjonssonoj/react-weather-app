@@ -1,6 +1,7 @@
 import React from 'react';
 import SearchCity from './components/SearchCity';
 import WeatherReport from './components/WeatherReport';
+import axios from 'axios';
 
 
 class App extends React.Component {
@@ -8,28 +9,42 @@ class App extends React.Component {
 		super()
 		this.state = {
 			errorMessage: false,
-			report: true,
+			errorMessageTxt: "",
+			report: false,
 			city: "",
-			country: "",
 			temperature: "",
-			humidity: ""
+			humidity: "",
+			description: "",
+			icon: "",
 		}
 	}
+	
+	getWeather = (id) => {
+		axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${id}&units=metric&appid=a9f6719e37f20890ebff5d91724dec1f`)
+		.then(response =>{
+			this.setState({
+				report: true,
+				errorMessage: false,
+				city: response.data.name,
+				temperature: response.data.main.temp,
+				humidity: response.data.main.humidity,
+				description: response.data.weather[0].description,
+				icon: response.data.weather[0].icon
+			});
+		}).catch(error => {
+			console.log("This is not a valid city name")
+			this.setState({
+				report: false,
+				errorMessage: true,
+				errorMessageTxt: id
+			})
 
-	getWeather = async (id) => {
-		const APIKey = "a9f6719e37f20890ebff5d91724dec1f";
-		const call = await fetch(
-			`http://api.openweathermap.org/data/2.5/weather?q=${id}&units=metric&appid=${APIKey}`
-		);
-		const response = await call.json();
-		console.log(response);
-
-		this.setState({
-			city: response.name,
-			temperature: response.main.temp,
-			humidity: response.main.humidity
+			if(this.errorMessage) {
+				console.log("This is not a valid city name")
+			}
 		})
-	};
+
+	}
 
 	render() {
 		return (
@@ -46,7 +61,15 @@ class App extends React.Component {
 						? (
 							<WeatherReport item={this.state}/>
 						)
-						: ''
+						: ""
+					}
+
+					{
+						this.state.errorMessage 
+						? (
+							<p className="alert alert-warning">Oh, sorry, something went wrong. You sure that "<span className="errorMsg">{this.state.errorMessageTxt}</span>" actually exists?</p>
+						)
+						: ""
 					}
 				</div>
 			</div>
